@@ -1,6 +1,4 @@
-import { PokemonGrid, PokemonsReponse, SimplePokemon } from "@/app/pokemons";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import { PokemonGrid, PokemonsReponse, SimplePokemon } from "@/pokemons";
 
 
 const getPokemons = async( limit = 20, offset= 0 ):Promise<SimplePokemon[]> => {
@@ -12,7 +10,8 @@ const getPokemons = async( limit = 20, offset= 0 ):Promise<SimplePokemon[]> => {
       name: pokemon.name,
     }));
 
-    throw notFound();
+    // throw new Error('Esto es un error que no debería de suceder');
+    // throw notFound();
 
     return pokemons;
 }
