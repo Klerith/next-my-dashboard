@@ -11,27 +11,42 @@ interface Props {
 
 export async function generateMetadata({ params }:Props): Promise<Metadata> {
 
-  const { id, name } = await getPokemon(params.id);
-
-  return {
-    title: `#${ id } - ${ name }`,
-    description: `Página del pokémon ${ name }`
+  try {
+    const { id, name } = await getPokemon(params.id);
+  
+    return {
+      title: `#${ id } - ${ name }`,
+      description: `Página del pokémon ${ name }`
+    }
+    
+  } catch (error) {
+    return {
+      title: 'Página del pokémon',
+      description: 'Culpa cupidatat ipsum magna reprehenderit ex tempor sint ad minim reprehenderit consequat sit.'
+    }
   }
 }
 
 
 const getPokemon = async(id: string): Promise<Pokemon> => {
-  const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${ id }`,{
-    cache: 'force-cache'// TODO: cambiar esto en un futuro
-    // next: {
-    //   revalidate: 60 * 60 * 30 * 6
-    // }
-  }).then( resp => resp.json() );
 
-  console.log('Se cargó: ', pokemon.name);
 
-  notFound();
-  return pokemon;
+  try {
+    const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${ id }`,{
+      cache: 'force-cache'// TODO: cambiar esto en un futuro
+      // next: {
+      //   revalidate: 60 * 60 * 30 * 6
+      // }
+    }).then( resp => resp.json() );
+  
+    console.log('Se cargó: ', pokemon.name);
+  
+    return pokemon;
+    
+  } catch (error) {
+    notFound();
+  }
+
 }
 
 
@@ -41,7 +56,6 @@ export default async function PokemonPage({ params }: Props) {
 
   const pokemon = await getPokemon(params.id);
 
-  // notFound();
 
   return (
     <div className="flex mt-5 flex-col items-center text-slate-800">
